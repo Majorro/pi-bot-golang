@@ -5,6 +5,7 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/majorro/pi-bot/internal/db"
 	"log"
+	"math/rand"
 	"os"
 	"time"
 
@@ -22,7 +23,29 @@ func initBot() (*tele.Bot, error) {
 
 func addHandlers(b *tele.Bot, pgDb *pg.DB) {
 	b.Handle("/grow", func(c tele.Context) error {
-		return c.Send("Your thing has grown!")
+		sender := c.Sender()
+		u := &db.User{
+			Id:       sender.ID,
+			Username: sender.Username,
+		}
+		err := db.GetOrInsertUser(pgDb, u)
+		if err != nil {
+			log.Println(err)
+			return c.Send("ВСЕ В ДЕРЬМЕ")
+		}
+
+		growth := rand.Intn(20) - 10
+		u.ThingSize += growth
+
+		err = db.UpdateUser(pgDb, u)
+		if err != nil {
+			log.Println(err)
+			return c.Send("ВСЕ В ДЕРЬМЕ")
+		}
+
+		msg := `@%s, ваша штуковина выросла на %d см!!!
+теперь её размер %d см!!!`
+		return c.Send(fmt.Sprintf(msg, u.Username, growth, u.ThingSize))
 	})
 }
 
