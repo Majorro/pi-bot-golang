@@ -40,6 +40,7 @@ func InitAndConnect(callback func(db *pg.DB)) {
 	}
 	log.Println("Schema created")
 
+	callback(db)
 }
 
 func createSchema(db *pg.DB) error {
