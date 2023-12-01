@@ -1,6 +1,9 @@
 package tgbot
 
 import (
+	"fmt"
+	"github.com/go-pg/pg/v10"
+	"github.com/majorro/pi-bot/internal/db"
 	"log"
 	"os"
 	"time"
@@ -17,19 +20,19 @@ func initBot() (*tele.Bot, error) {
 	return tele.NewBot(pref)
 }
 
-func addHandlers(b *tele.Bot) {
+func addHandlers(b *tele.Bot, pgDb *pg.DB) {
 	b.Handle("/grow", func(c tele.Context) error {
 		return c.Send("Your thing has grown!")
 	})
 }
 
-func Start() {
+func Start(db *pg.DB) {
 	b, err := initBot()
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
 
-	addHandlers(b)
+	addHandlers(b, db)
 	b.Start()
+	log.Println("Bot started")
 }

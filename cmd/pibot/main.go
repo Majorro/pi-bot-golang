@@ -1,9 +1,10 @@
 package main
 
 import (
+	"github.com/majorro/pi-bot/internal/db"
 	pibot "github.com/majorro/pi-bot/internal/tgbot"
 )
 
 func main() {
-	pibot.Start()
+	db.InitAndConnect(pibot.Start)
 }
