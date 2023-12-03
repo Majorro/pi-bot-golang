@@ -50,5 +50,6 @@ func createSchema(db *pg.DB) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

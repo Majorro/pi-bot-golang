@@ -9,8 +9,9 @@ import (
 type User struct {
 	Id int64 `pg:",pk"`
 
-	Username     string
-	ThingSize    int `pg:",default:0" pg:",notnull"`
+	FullName     string `pg:",notnull"`
+	Username     string `pg:",notnull"`
+	ThingSize    int    `pg:",default:0" pg:",notnull"`
 	LastGrowthAt time.Time
 }
 
@@ -42,6 +43,14 @@ func GetOrInsertUser(db *pg.DB, u *User) (*User, error) {
 	}
 
 	return u, nil
+}
+
+func GetOrderedUsers(db *pg.DB) (users []User, err error) {
+	err = db.Model(&users).Order("thing_size desc").Limit(100).Select()
+	if err != nil {
+		return
+	}
+	return
 }
 
 func UpdateUser(db *pg.DB, u *User) error {

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/go-pg/pg/v10"
+	"github.com/majorro/pi-bot/internal/db"
 	tele "gopkg.in/telebot.v3"
 	"log"
 )
@@ -12,10 +13,9 @@ type handler interface {
 }
 
 func AddAll(b *tele.Bot, pgDb *pg.DB) {
-	handlers := []Handler{
-		Grow{},
 	handlers := []handler{
 		grow{},
+		leaderboard{},
 	}
 
 	for _, h := range handlers {

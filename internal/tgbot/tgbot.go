@@ -12,8 +12,9 @@ import (
 
 func initBot() (*tele.Bot, error) {
 	pref := tele.Settings{
-		Token:  os.Getenv("PI_BOT_TOKEN"),
-		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
+		Token:     os.Getenv("PI_BOT_TOKEN"),
+		Poller:    &tele.LongPoller{Timeout: 10 * time.Second},
+		ParseMode: tele.ModeMarkdown,
 	}
 
 	return tele.NewBot(pref)
