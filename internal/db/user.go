@@ -10,7 +10,7 @@ type User struct {
 	Id int64 `pg:",pk"`
 
 	Username     string
-	ThingSize    int `pg:",default:0"`
+	ThingSize    int `pg:",default:0" pg:",notnull"`
 	LastGrowthAt time.Time
 }
 

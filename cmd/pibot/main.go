@@ -9,6 +9,6 @@ import (
 func main() {
 	err := db.InitAndConnect(pibot.Start)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 }

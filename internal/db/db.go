@@ -44,5 +44,11 @@ func createSchema(db *pg.DB) error {
 			return err
 		}
 	}
+
+	// TODO: refactor
+	_, err := db.Exec("CREATE INDEX IF NOT EXISTS users_thing_size_btree ON users USING btree (thing_size DESC);")
+	if err != nil {
+		return err
+	}
 	return nil
 }
