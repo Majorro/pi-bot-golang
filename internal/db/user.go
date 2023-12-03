@@ -3,13 +3,15 @@ package db
 import (
 	"fmt"
 	"github.com/go-pg/pg/v10"
+	"time"
 )
 
 type User struct {
-	Id int64 `pg:",unique"`
+	Id int64 `pg:",pk"`
 
-	Username  string
-	ThingSize int `pg:",default:0"`
+	Username     string
+	ThingSize    int `pg:",default:0"`
+	LastGrowthAt time.Time
 }
 
 func (u User) String() string {
@@ -17,7 +19,7 @@ func (u User) String() string {
 }
 
 func GetUser(db *pg.DB, u *User) error {
-	return db.Model(u).Where("id = ?id").Select()
+	return db.Model(u).WherePK().Select()
 }
 
 func InsertUser(db *pg.DB, u *User) error {

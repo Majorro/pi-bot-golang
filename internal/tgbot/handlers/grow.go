@@ -8,6 +8,7 @@ import (
 	"log"
 	"math"
 	"math/rand"
+	"time"
 )
 
 type Grow struct{}
@@ -39,8 +40,10 @@ func (h Grow) Handle(ctx tele.Context, d *pg.DB) error {
 	}
 	log.Printf("%s: got user from db - %v\n", h.GetCommand(), u)
 
-	growth := getThingGrowth()
-	u.ThingSize += growth
+	growth, ok := tryUpdateThing(u)
+	if !ok {
+		return ctx.Send(fmt.Sprintf("@%s, сегодня уже был рост штуковины!!!", u.Username))
+	}
 
 	err = db.UpdateUser(d, u)
 	if err != nil {
@@ -50,13 +53,23 @@ func (h Grow) Handle(ctx tele.Context, d *pg.DB) error {
 
 	var msg string
 	if growth >= 0 {
-		msg = `@%s, ваша штуковина выросла на %d см!!!
-теперь её размер %d см!!!`
+		msg = `@%s, ваша штуковина выросла на %d см!!! теперь её размер %d см!!!`
 	} else {
-		msg = `@%s, ваша штуковина уменьшилась на %d см!!!
-теперь её размер %d см!!!`
+		msg = `@%s, ваша штуковина уменьшилась на %d см!!! теперь её размер %d см!!!`
 	}
 	return ctx.Send(fmt.Sprintf(msg, u.Username, abs(growth), u.ThingSize))
+}
+
+func tryUpdateThing(u *db.User) (int, bool) {
+	if u.LastGrowthAt.YearDay() == time.Now().YearDay() { // TODO: timezones? 24h cooldown?
+		return 0, false
+	}
+
+	u.LastGrowthAt = time.Now()
+	growth := getThingGrowth()
+	u.ThingSize += growth
+
+	return growth, true
 }
 
 func getThingGrowth() int {
