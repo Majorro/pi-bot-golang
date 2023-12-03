@@ -11,34 +11,17 @@ import (
 	"time"
 )
 
-type Grow struct{}
+type grow struct{}
 
-func (h Grow) GetCommand() string {
+func (h grow) getCommand() string {
 	return "/grow"
 }
 
-func (h Grow) Handle(ctx tele.Context, d *pg.DB) error {
-	sender := ctx.Sender()
-	log.Printf("%s: %s-%d\n", h.GetCommand(), sender.Username, sender.ID)
-
-	u := &db.User{
-		Id:       sender.ID,
-		Username: sender.Username,
-	}
-
-	err := db.GetUser(d, u)
+func (h grow) handle(ctx tele.Context, d *pg.DB) error {
+	u, err := handleFirstUserInteraction(h, ctx, d)
 	if err != nil {
-		switch err {
-		case pg.ErrNoRows:
-			insertErr := db.InsertUser(d, u)
-			if insertErr != nil {
-				return insertErr
-			}
-		default:
-			return err
-		}
+		return err
 	}
-	log.Printf("%s: got user from db - %v\n", h.GetCommand(), u)
 
 	growth, ok := tryUpdateThing(u)
 	if !ok {
@@ -49,7 +32,7 @@ func (h Grow) Handle(ctx tele.Context, d *pg.DB) error {
 	if err != nil {
 		return err
 	}
-	log.Printf("%s: updated user - %v\n", h.GetCommand(), u)
+	log.Printf("%s: updated user - %v\n", h.getCommand(), u)
 
 	var msg string
 	if growth >= 0 {
