@@ -5,6 +5,7 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/majorro/pi-bot/internal/db"
 	"log"
+	"math"
 	"math/rand"
 	"os"
 	"time"
@@ -47,7 +48,7 @@ func addHandlers(b *tele.Bot, pgDb *pg.DB) {
 		}
 		log.Printf("/grow: got user from db - %v\n", u)
 
-		growth := rand.Intn(20) - 10
+		growth := getThingGrowth()
 		u.ThingSize += growth
 
 		err = db.UpdateUser(pgDb, u)
@@ -57,10 +58,29 @@ func addHandlers(b *tele.Bot, pgDb *pg.DB) {
 		}
 		log.Printf("/grow: updated user - %v\n", u)
 
-		msg := `@%s, ваша штуковина выросла на %d см!!!
+		var msg string
+		if growth > 0 {
+			msg = `@%s, ваша штуковина выросла на %d см!!!
 теперь её размер %d см!!!`
-		return c.Send(fmt.Sprintf(msg, u.Username, growth, u.ThingSize))
+		} else {
+			msg = `@%s, ваша штуковина уменьшилась на %d см!!!
+теперь её размер %d см!!!`
+		}
+		return c.Send(fmt.Sprintf(msg, u.Username, growth, abs(u.ThingSize)))
 	})
+}
+
+func getThingGrowth() int {
+	stdDev := 4.0
+	mean := 3.0
+	return int(math.Round(rand.NormFloat64()*stdDev + mean))
+}
+
+func abs(num int) int {
+	if num < 0 {
+		return -num
+	}
+	return num
 }
 
 func Start(db *pg.DB) error {
