@@ -11,7 +11,7 @@ type User struct {
 
 	FullName     string `pg:",notnull"`
 	Username     string `pg:",notnull"`
-	ThingSize    int    `pg:",default:0" pg:",notnull"`
+	ThingSize    int    `pg:",default:0,notnull"`
 	LastGrowthAt time.Time
 }
 
