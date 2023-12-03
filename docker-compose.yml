@@ -9,10 +9,11 @@ services:
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
   pibot:
     build: .
-    # noinspection ComposeUnknownValues
-    restart: on-failure:5 # TODO: always?
+    restart: always
     environment:
       - PI_BOT_TOKEN=${PI_BOT_TOKEN}
       - DB_HOST=${DB_HOST}
@@ -21,3 +22,6 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
     depends_on:
       - db
+
+volumes:
+  db-data:

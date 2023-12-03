@@ -2,6 +2,8 @@
 
 FROM golang:1.21-alpine AS deps
 
+RUN apk --update add ca-certificates git
+
 WORKDIR /app
 
 COPY go.mod go.sum ./
@@ -16,9 +18,8 @@ RUN go test -v ./...
 
 FROM scratch AS release
 
-RUN apk add --update --no-cache ca-certificates git
-
 WORKDIR /
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /pibot /pibot
 
 ENTRYPOINT ["/pibot"]
