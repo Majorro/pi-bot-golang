@@ -5,15 +5,19 @@ services:
     image: postgres
     restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
   pibot:
     build: .
     # noinspection ComposeUnknownValues
     restart: on-failure:5 # TODO: always?
     environment:
-      - PI_BOT_TOKEN=6424847260:AAG1YdfFDh_vfZNnCi0U5Qpe4c1WodCTliA
+      - PI_BOT_TOKEN=${PI_BOT_TOKEN}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
     depends_on:
       - db

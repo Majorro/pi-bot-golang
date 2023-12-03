@@ -1,22 +1,22 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.21-alpine AS build
+FROM golang:1.21-alpine AS deps
 
 WORKDIR /app
 
-COPY . ./
-RUN go mod tidy
+COPY go.mod go.sum ./
+RUN go mod download
 
+FROM deps AS build
+COPY . ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o /pibot cmd/pibot/main.go
 
 FROM build AS test
 RUN go test -v ./...
 
-# not scratch because issues with certificates
-FROM alpine:latest AS release
+FROM scratch AS release
 
-# TODO: remove?
-RUN apk add libc6-compat
+RUN apk add --update --no-cache ca-certificates git
 
 WORKDIR /
 COPY --from=build /pibot /pibot

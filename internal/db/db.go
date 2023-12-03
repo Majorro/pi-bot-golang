@@ -5,13 +5,14 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 	"log"
+	"os"
 )
 
 func InitAndConnect(callback func(db *pg.DB) error) error {
-	db := pg.Connect(&pg.Options{
-		Addr:     "db:5432",
-		User:     "postgres",
-		Password: "postgres",
+	db := pg.Connect(&pg.Options{ // TODO: add custom database creation
+		Addr:     os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT"),
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
 	})
 	defer db.Close()
 
