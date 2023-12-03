@@ -19,7 +19,7 @@ func (u User) String() string {
 	return fmt.Sprintf("User %d: %s, %d", u.Id, u.Username, u.ThingSize)
 }
 
-func InitAndConnect(callback func(db *pg.DB)) {
+func InitAndConnect(callback func(db *pg.DB) error) error {
 	db := pg.Connect(&pg.Options{
 		Addr:     "db:5432",
 		User:     "postgres",
@@ -30,17 +30,17 @@ func InitAndConnect(callback func(db *pg.DB)) {
 
 	ctx := context.Background()
 	if err := db.Ping(ctx); err != nil {
-		log.Fatal(err)
+		return err
 	}
 	log.Println("Connected to DB")
 
 	err := createSchema(db)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	log.Println("Schema created")
 
-	callback(db)
+	return callback(db)
 }
 
 func createSchema(db *pg.DB) error {

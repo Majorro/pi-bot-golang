@@ -15,4 +15,9 @@ require (
 	golang.org/x/sys v0.1.0 // indirect
 	gopkg.in/telebot.v3 v3.2.1 // indirect
 	mellium.im/sasl v0.3.1 // indirect
+
+	//telebot debug
+	//github.com/goccy/go-yaml v1.9.5
+	//github.com/spf13/viper v1.13.0
+	//github.com/stretchr/testify v1.8.0
 )
