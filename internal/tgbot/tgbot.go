@@ -30,10 +30,20 @@ func addHandlers(b *tele.Bot, pgDb *pg.DB) {
 			Id:       sender.ID,
 			Username: sender.Username,
 		}
-		err := db.GetOrInsertUser(pgDb, u)
+
+		err := db.GetUser(pgDb, u)
 		if err != nil {
-			log.Println(err)
-			return c.Send("ВСЕ В ДЕРЬМЕ")
+			switch err {
+			case pg.ErrNoRows:
+				insertErr := db.InsertUser(pgDb, u)
+				if insertErr != nil {
+					log.Println(insertErr)
+					return c.Send("ВСЕ В ДЕРЬМЕ")
+				}
+			default:
+				log.Println(err)
+				return c.Send("ВСЕ В ДЕРЬМЕ")
+			}
 		}
 		log.Printf("/grow: got user from db - %v\n", u)
 

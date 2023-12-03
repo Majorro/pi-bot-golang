@@ -9,10 +9,10 @@ import (
 )
 
 type User struct {
-	Id int64 `pg:",pk"`
+	Id int64 `pg:",unique"`
 
 	Username  string
-	ThingSize int
+	ThingSize int `pg:",default:0"`
 }
 
 func (u User) String() string {
@@ -24,7 +24,6 @@ func InitAndConnect(callback func(db *pg.DB) error) error {
 		Addr:     "db:5432",
 		User:     "postgres",
 		Password: "postgres",
-		Database: "pibot",
 	})
 	defer db.Close()
 
@@ -59,23 +58,16 @@ func createSchema(db *pg.DB) error {
 	return nil
 }
 
-func GetOrInsertUser(db *pg.DB, u *User) error {
-	err := db.Model(u).WherePK().Select()
-	if err != nil {
-		log.Println(err, u)
-		err = InsertUser(db, u)
-		return err
-	}
-
-	return nil
+func GetUser(db *pg.DB, u *User) error {
+	return db.Model(u).Where("id = ?id").Select()
 }
 
 func InsertUser(db *pg.DB, u *User) error {
-	_, err := db.Model(&u).Insert()
+	_, err := db.Model(u).Insert()
 	return err
 }
 
 func UpdateUser(db *pg.DB, u *User) error {
-	_, err := db.Model(u).Update()
+	_, err := db.Model(u).WherePK().Update()
 	return err
 }
