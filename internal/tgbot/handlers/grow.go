@@ -56,8 +56,8 @@ func tryUpdateThing(u *db.User) (int, bool) {
 }
 
 func getThingGrowth() int {
-	stdDev := 4.2
-	mean := 2.5
+	stdDev := 3.9
+	mean := 3.0
 	return int(math.Round(rand.NormFloat64()*stdDev + mean))
 }
 
