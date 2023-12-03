@@ -49,19 +49,19 @@ func (h Grow) Handle(ctx tele.Context, d *pg.DB) error {
 	log.Printf("%s: updated user - %v\n", h.GetCommand(), u)
 
 	var msg string
-	if growth > 0 {
+	if growth >= 0 {
 		msg = `@%s, ваша штуковина выросла на %d см!!!
 теперь её размер %d см!!!`
 	} else {
 		msg = `@%s, ваша штуковина уменьшилась на %d см!!!
 теперь её размер %d см!!!`
 	}
-	return ctx.Send(fmt.Sprintf(msg, u.Username, growth, abs(u.ThingSize)))
+	return ctx.Send(fmt.Sprintf(msg, u.Username, abs(growth), u.ThingSize))
 }
 
 func getThingGrowth() int {
-	stdDev := 4.0
-	mean := 3.0
+	stdDev := 4.2
+	mean := 2.5
 	return int(math.Round(rand.NormFloat64()*stdDev + mean))
 }
 
