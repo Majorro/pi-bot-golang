@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/go-pg/pg/v10"
 	tele "gopkg.in/telebot.v3"
+	"log"
 )
 
 type Handler interface {
@@ -16,9 +17,11 @@ func AddAll(b *tele.Bot, pgDb *pg.DB) {
 	}
 
 	for _, h := range handlers {
-		b.Handle("/grow", func(c tele.Context) error {
+		comm := h.GetCommand()
+		b.Handle(comm, func(c tele.Context) error {
 			err := h.Handle(c, pgDb)
 			if err != nil {
+				log.Printf("%s: %v", comm, err)
 				return c.Send("ВСЕ В ДЕРЬМЕ")
 			}
 
