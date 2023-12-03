@@ -12,6 +12,13 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
   pibot:
+    # HOT RELOAD
+    #    build:
+    #      context: .
+    #      dockerfile: hr.Dockerfile
+    #    volumes:
+    #        - ./:/app
+
     build: .
     restart: always
     environment:
