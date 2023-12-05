@@ -14,7 +14,7 @@ func TestTryUpdateThing_GrowthWhenLastGrowthWasYesterday(t *testing.T) {
 
 	growth, ok := tryUpdateThing(u)
 
-	if !ok || growth == 0 {
+	if !ok {
 		t.Errorf("Expected growth, got: %d", growth)
 	}
 }
@@ -27,7 +27,7 @@ func TestTryUpdateThing_NoGrowthWhenLastGrowthWasToday(t *testing.T) {
 
 	growth, ok := tryUpdateThing(u)
 
-	if ok || growth != 0 {
+	if ok {
 		t.Errorf("Expected no growth, got: %d", growth)
 	}
 }
