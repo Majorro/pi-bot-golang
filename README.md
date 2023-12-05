@@ -7,10 +7,10 @@ yet another random tg bot
 2. .env file with the following variables:
 ```
 PI_BOT_TOKEN - telegram bot token given by @BotFather
-DB_HOST - postgres host
-DB_PORT - postgres port
-DB_USER - postgres user
-DB_PASSWORD - postgres password
+PI_BOT_DB_HOST - postgres host
+PI_BOT_DB_PORT - postgres port
+PI_BOT_DB_USER - postgres user
+PI_BOT_DB_PASSWORD - postgres password
 ```
 
 ## Run
