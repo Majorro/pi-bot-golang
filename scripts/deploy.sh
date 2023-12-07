@@ -11,8 +11,8 @@ if [ $LOCAL = $REMOTE ]; then
     echo "Up-to-date"
 elif [ $LOCAL = $BASE ]; then
     echo "Need to pull"
+    docker-volume-snapshot create pi-bot_db-data db-backup.tar.gz
     git pull
-    chmod +x ./scripts/deploy.sh
     docker compose up -d --no-deps --build pibot
 else
     echo "???"
