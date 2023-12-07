@@ -44,11 +44,11 @@ func (h grow) handle(ctx tele.Context, d *pg.DB) error {
 }
 
 func tryUpdateThing(u *db.User) (int, bool) {
-	if u.LastGrowthAt.YearDay() == time.Now().YearDay() { // TODO: timezones? 24h cooldown?
+	if u.LastGrowthAt.UTC().YearDay() == time.Now().UTC().YearDay() {
 		return 0, false
 	}
 
-	u.LastGrowthAt = time.Now()
+	u.LastGrowthAt = time.Now().UTC()
 	growth := getThingGrowth()
 	u.ThingSize += growth
 
