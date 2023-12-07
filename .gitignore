@@ -139,3 +139,5 @@ fabric.properties
 
 .env
 **/*.log
+**/*.tar
+**/*.gz
