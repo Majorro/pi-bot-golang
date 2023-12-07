@@ -3,6 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres
+    container_name: pibot-db
     restart: always
     ports:
       - "5432:5432"
@@ -20,6 +21,8 @@ services:
     #        - ./:/app
 
     build: .
+    image: majorro/pibot
+    container_name: pibot
     restart: always
     environment:
       - PI_BOT_TOKEN=${PI_BOT_TOKEN}
