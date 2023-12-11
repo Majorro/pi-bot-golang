@@ -14,7 +14,7 @@ func ProvideUser(d *pg.DB) tele.MiddlewareFunc {
 			command := ctx.Text()
 
 			sender := ctx.Sender()
-			log.Printf("%s: %s\n", command, sender.Username)
+			log.Printf("%s sent %s\n", sender.Username, command)
 
 			var name string
 			if sender.LastName == "" {

@@ -26,7 +26,7 @@ func AddAll(b *tele.Bot, pgDb *pg.DB) {
 		b.Handle(comm, func(c tele.Context) error {
 			err := h.handle(c, pgDb)
 			if err != nil {
-				log.Printf("%s: %v", comm, err)
+				log.Print(err)
 				return c.Send("ВСЕ В ДЕРЬМЕ @majorro228")
 			}
 
