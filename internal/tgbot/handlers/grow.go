@@ -18,17 +18,14 @@ func (h grow) getCommand() string {
 }
 
 func (h grow) handle(ctx tele.Context, d *pg.DB) error {
-	u, err := handleFirstUserInteraction(h, ctx, d)
-	if err != nil {
-		return err
-	}
+	u := ctx.Get("user").(*db.User)
 
 	growth, ok := tryUpdateThing(u)
 	if !ok {
 		return ctx.Send(fmt.Sprintf("@%s, сегодня уже был рост штуковины!!!", u.Username))
 	}
 
-	err = db.UpdateUser(d, u)
+	err := db.UpdateUser(d, u)
 	if err != nil {
 		return err
 	}

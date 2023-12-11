@@ -15,13 +15,9 @@ func (h leaderboard) getCommand() string {
 }
 
 func (h leaderboard) handle(ctx tele.Context, d *pg.DB) error {
-	u, err := handleFirstUserInteraction(h, ctx, d)
-	if err != nil {
-		return err
-	}
+	u := ctx.Get("user").(*db.User)
 
-	var allUsers []db.User
-	allUsers, err = db.GetOrderedUsers(d)
+	allUsers, err := db.GetOrderedUsers(d)
 	if err != nil {
 		return err
 	}
