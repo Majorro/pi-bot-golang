@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"github.com/go-pg/pg/v10"
 	"github.com/majorro/pi-bot/internal/db"
 	tele "gopkg.in/telebot.v3"
@@ -30,7 +31,7 @@ func ProvideUser(d *pg.DB) tele.MiddlewareFunc {
 
 			u, err := db.GetOrInsertUser(d, u)
 			if err != nil {
-				return err
+				return fmt.Errorf("error providing user for context: %v", err)
 			}
 			log.Printf("%s: got user from db - %v\n", command, u)
 

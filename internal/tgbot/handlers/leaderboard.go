@@ -19,7 +19,7 @@ func (h leaderboard) handle(ctx tele.Context, d *pg.DB) error {
 
 	allUsers, err := db.GetOrderedUsers(d)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s err: %w", h.getCommand(), err)
 	}
 
 	rowTemplate := "%d. %s — _%d_\n"
@@ -36,9 +36,9 @@ func (h leaderboard) handle(ctx tele.Context, d *pg.DB) error {
 
 		_, err := fmt.Fprintf(&builder, t, i+1, usr.FullName, usr.ThingSize)
 		if err != nil {
-			return err
+			return fmt.Errorf("%s err: %w", h.getCommand(), err)
 		}
 	}
 
-	return ctx.Send(builder.String())
+	return fmt.Errorf("%s err: %w", h.getCommand(), ctx.Send(builder.String()))
 }

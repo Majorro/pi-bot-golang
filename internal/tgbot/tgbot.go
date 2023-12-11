@@ -1,6 +1,7 @@
 package tgbot
 
 import (
+	"fmt"
 	"github.com/go-pg/pg/v10"
 	"github.com/majorro/pi-bot/internal/tgbot/handlers"
 	"log"
@@ -23,7 +24,7 @@ func initBot() (*tele.Bot, error) {
 func Start(db *pg.DB) error {
 	b, err := initBot()
 	if err != nil {
-		return err
+		return fmt.Errorf("error during startup: %v", err)
 	}
 	log.Println("Bot created")
 

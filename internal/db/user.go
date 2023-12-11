@@ -20,12 +20,12 @@ func (u User) String() string {
 }
 
 func GetUser(db *pg.DB, u *User) error {
-	return db.Model(u).WherePK().Select()
+	return fmt.Errorf("error getting user %v: %v", u, db.Model(u).WherePK().Select())
 }
 
 func InsertUser(db *pg.DB, u *User) error {
 	_, err := db.Model(u).Insert()
-	return err
+	return fmt.Errorf("error inserting user %v: %v", u, err)
 }
 
 func GetOrInsertUser(db *pg.DB, u *User) (*User, error) {
@@ -35,10 +35,10 @@ func GetOrInsertUser(db *pg.DB, u *User) (*User, error) {
 		case pg.ErrNoRows:
 			insertErr := InsertUser(db, u)
 			if insertErr != nil {
-				return u, insertErr
+				return nil, fmt.Errorf("error getserting user %v: %v", u, insertErr)
 			}
 		default:
-			return u, err
+			return nil, fmt.Errorf("error getserting user %v: %v", u, err)
 		}
 	}
 
@@ -48,12 +48,12 @@ func GetOrInsertUser(db *pg.DB, u *User) (*User, error) {
 func GetOrderedUsers(db *pg.DB) (users []User, err error) {
 	err = db.Model(&users).Order("thing_size desc").Limit(100).Select()
 	if err != nil {
-		return
+		return nil, fmt.Errorf("error getting ordered users: %v", err)
 	}
 	return
 }
 
 func UpdateUser(db *pg.DB, u *User) error {
 	_, err := db.Model(u).WherePK().Update()
-	return err
+	return fmt.Errorf("error updating user %v: %v", u, err)
 }

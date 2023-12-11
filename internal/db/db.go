@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 	"log"
@@ -18,13 +20,13 @@ func InitAndConnect(callback func(db *pg.DB) error) error {
 
 	ctx := context.Background()
 	if err := db.Ping(ctx); err != nil {
-		return err
+		return errors.New("can't connect to db")
 	}
 	log.Println("Connected to DB")
 
 	err := createSchema(db)
 	if err != nil {
-		return err
+		return fmt.Errorf("db init err: %v", err)
 	}
 	log.Println("Schema created")
 

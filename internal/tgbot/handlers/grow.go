@@ -22,12 +22,12 @@ func (h grow) handle(ctx tele.Context, d *pg.DB) error {
 
 	growth, ok := tryUpdateThing(u)
 	if !ok {
-		return ctx.Send(fmt.Sprintf("@%s, сегодня уже был рост штуковины!!!", u.Username))
+		return fmt.Errorf("%s err: %w", h.getCommand(), ctx.Send(fmt.Sprintf("@%s, сегодня уже был рост штуковины!!!", u.Username)))
 	}
 
 	err := db.UpdateUser(d, u)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s err: %w", h.getCommand(), err)
 	}
 	log.Printf("%s: updated user - %v\n", h.getCommand(), u)
 
@@ -37,7 +37,7 @@ func (h grow) handle(ctx tele.Context, d *pg.DB) error {
 	} else {
 		msg = `@%s, ваша штуковина уменьшилась на %d см!!! теперь её размер %d см!!!`
 	}
-	return ctx.Send(fmt.Sprintf(msg, u.Username, abs(growth), u.ThingSize))
+	return fmt.Errorf("%s err: %w", h.getCommand(), ctx.Send(fmt.Sprintf(msg, u.Username, abs(growth), u.ThingSize)))
 }
 
 func tryUpdateThing(u *db.User) (int, bool) {
