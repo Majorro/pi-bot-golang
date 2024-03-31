@@ -10,8 +10,8 @@ import (
 type User struct {
 	Id int64 `pg:",pk"`
 
-	FullName     string `pg:",notnull"`
-	Username     string `pg:",notnull"`
+	FullName     string `pg:",default:'',notnull"`
+	Username     string `pg:",default:'',notnull"`
 	ThingSize    int    `pg:",default:0,notnull"`
 	LastGrowthAt time.Time
 }
@@ -62,7 +62,7 @@ func GetOrderedUsers(db *pg.DB) (users []User, err error) {
 }
 
 func UpdateUser(db *pg.DB, u *User) error {
-	_, err := db.Model(u).WherePK().Update()
+	_, err := db.Model(u).WherePK().UpdateNotZero()
 	if err != nil {
 		return fmt.Errorf("error updating user %v: %w", u, err)
 	}
