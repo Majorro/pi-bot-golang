@@ -36,18 +36,26 @@ func InsertUser(db *pg.DB, u *User) error {
 	return nil
 }
 
-func GetOrInsertUser(db *pg.DB, u *User) (*User, error) {
-	err := GetUser(db, u)
+func GetOrUpsertUser(db *pg.DB, u *User) (*User, error) {
+	tempUser := &User{Id: u.Id}
+	err := GetUser(db, tempUser)
 	if err != nil {
 		switch {
 		case errors.Is(err, pg.ErrNoRows):
 			insertErr := InsertUser(db, u)
 			if insertErr != nil {
-				return nil, fmt.Errorf("error getserting user %v: %w", u, insertErr)
+				return nil, fmt.Errorf("GetOrUpsertUser %v: %w", u, insertErr)
 			}
 		default:
-			return nil, fmt.Errorf("error getserting user %v: %w", u, err)
+			return nil, fmt.Errorf("GetOrUpsertUser %v: %w", u, err)
 		}
+	}
+
+	u.ThingSize = tempUser.ThingSize
+	u.LastGrowthAt = tempUser.LastGrowthAt
+	err = UpdateUser(db, u)
+	if err != nil {
+		return nil, fmt.Errorf("GetOrUpsertUser %v: %w", u, err)
 	}
 
 	return u, nil

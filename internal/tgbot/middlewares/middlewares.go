@@ -23,13 +23,12 @@ func ProvideUser(d *pg.DB) tele.MiddlewareFunc {
 				name = sender.FirstName + " " + sender.LastName
 			}
 			u := &db.User{
-				Id:        sender.ID,
-				FullName:  name,
-				Username:  sender.Username,
-				ThingSize: 0,
+				Id:       sender.ID,
+				FullName: name,
+				Username: sender.Username,
 			}
 
-			u, err := db.GetOrInsertUser(d, u)
+			u, err := db.GetOrUpsertUser(d, u)
 			if err != nil {
 				return fmt.Errorf("error providing user for context: %w", err)
 			}
