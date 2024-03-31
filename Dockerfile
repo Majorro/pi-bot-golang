@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.21-alpine AS deps
+FROM golang:1.22-alpine AS deps
 
 RUN apk --update add ca-certificates git
 
