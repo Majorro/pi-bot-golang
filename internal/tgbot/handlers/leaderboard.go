@@ -40,5 +40,9 @@ func (h leaderboard) handle(ctx tele.Context, d *pg.DB) error {
 		}
 	}
 
-	return fmt.Errorf("%s err: %w", h.getCommand(), ctx.Send(builder.String()))
+	err = ctx.Send(builder.String())
+	if err != nil {
+		return fmt.Errorf("%s err: %w", h.getCommand(), err)
+	}
+	return nil
 }

@@ -31,7 +31,7 @@ func ProvideUser(d *pg.DB) tele.MiddlewareFunc {
 
 			u, err := db.GetOrInsertUser(d, u)
 			if err != nil {
-				return fmt.Errorf("error providing user for context: %v", err)
+				return fmt.Errorf("error providing user for context: %w", err)
 			}
 			log.Printf("%s: got user from db - %v\n", command, u)
 

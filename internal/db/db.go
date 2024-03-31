@@ -26,7 +26,7 @@ func InitAndConnect(callback func(db *pg.DB) error) error {
 
 	err := createSchema(db)
 	if err != nil {
-		return fmt.Errorf("db init err: %v", err)
+		return fmt.Errorf("db init err: %w", err)
 	}
 	log.Println("Schema created")
 

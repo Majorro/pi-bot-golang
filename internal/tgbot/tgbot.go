@@ -24,7 +24,7 @@ func initBot() (*tele.Bot, error) {
 func Start(db *pg.DB) error {
 	b, err := initBot()
 	if err != nil {
-		return fmt.Errorf("error during startup: %v", err)
+		return fmt.Errorf("error during startup: %w", err)
 	}
 	log.Println("Bot created")
 
