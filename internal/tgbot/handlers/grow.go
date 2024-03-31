@@ -18,19 +18,20 @@ func (h grow) getCommand() string {
 }
 
 func (h grow) handle(ctx tele.Context, d *pg.DB) error {
-	u, err := handleFirstUserInteraction(h, ctx, d)
-	if err != nil {
-		return err
-	}
+	u := ctx.Get("user").(*db.User)
 
 	growth, ok := tryUpdateThing(u)
 	if !ok {
-		return ctx.Send(fmt.Sprintf("@%s, сегодня уже был рост штуковины!!!", u.Username))
+		err := ctx.Send(fmt.Sprintf("@%s, сегодня уже был рост штуковины!!!", u.Username))
+		if err != nil {
+			return fmt.Errorf("%s err: %w", h.getCommand(), err)
+		}
+		return nil
 	}
 
-	err = db.UpdateUser(d, u)
+	err := db.UpdateUser(d, u)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s err: %w", h.getCommand(), err)
 	}
 	log.Printf("%s: updated user - %v\n", h.getCommand(), u)
 
@@ -40,7 +41,12 @@ func (h grow) handle(ctx tele.Context, d *pg.DB) error {
 	} else {
 		msg = `@%s, ваша штуковина уменьшилась на %d см!!! теперь её размер %d см!!!`
 	}
-	return ctx.Send(fmt.Sprintf(msg, u.Username, abs(growth), u.ThingSize))
+
+	err = ctx.Send(fmt.Sprintf(msg, u.Username, abs(growth), u.ThingSize))
+	if err != nil {
+		return fmt.Errorf("%s err: %w", h.getCommand(), err)
+	}
+	return nil
 }
 
 func tryUpdateThing(u *db.User) (int, bool) {
