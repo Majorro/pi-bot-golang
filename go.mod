@@ -1,6 +1,6 @@
 module github.com/majorro/pi-bot
 
-go 1.21.4
+go 1.22
 
 require (
 	github.com/go-pg/pg/v10 v10.11.2
