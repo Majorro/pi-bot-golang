@@ -36,6 +36,7 @@ func InitAndConnect(callback func(db *pg.DB) error) error {
 func createSchema(db *pg.DB) error {
 	models := []interface{}{
 		(*User)(nil),
+		(*Megaprikol)(nil),
 	}
 
 	for _, m := range models {

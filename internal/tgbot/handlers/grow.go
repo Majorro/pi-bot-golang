@@ -64,6 +64,10 @@ func tryUpdateThing(u *db.User) (int, bool) {
 func getThingGrowth() int {
 	stdDev := 3.9
 	mean := 3.0
+	if time.Now().Month() == time.April && time.Now().Day() == 1 { // 😼
+		stdDev = 13
+		mean = -12
+	}
 	return int(math.Round(rand.NormFloat64()*stdDev + mean))
 }
 
