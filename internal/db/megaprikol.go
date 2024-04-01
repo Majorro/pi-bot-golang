@@ -27,11 +27,10 @@ func GetRandomMegaprikol(db *pg.DB) (*Megaprikol, error) {
 	return &ms[0], nil
 }
 
-func IncrementMegaprikolUsageCount(db *pg.DB, m *Megaprikol) error {
-	m.UsageCount++
-	_, err := db.Model(m).WherePK().Column("usage_count").Update()
+func UpdateMegaprikol(db *pg.DB, m *Megaprikol) error {
+	_, err := db.Model(m).WherePK().UpdateNotZero()
 	if err != nil {
-		return fmt.Errorf("error incrementing megaprikol usage count: %w", err)
+		return fmt.Errorf("error updating megaprikol: %w", err)
 	}
 	return nil
 }
@@ -42,4 +41,12 @@ func GetUnusedMegaprikols(db *pg.DB) (ms []Megaprikol, err error) {
 		return nil, fmt.Errorf("error getting unused megaprikols: %w", err)
 	}
 	return
+}
+
+func GetUnseenMegaprikolsCount(db *pg.DB) (int, error) {
+	count, err := db.Model((*Megaprikol)(nil)).Where("usage_count = 0").Count()
+	if err != nil {
+		return 0, fmt.Errorf("error getting unseen megaprikols count: %w", err)
+	}
+	return count, nil
 }
