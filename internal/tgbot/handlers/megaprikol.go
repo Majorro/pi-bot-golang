@@ -18,7 +18,8 @@ func (h megaprikol) handle(ctx tele.Context, d *pg.DB) error {
 		return fmt.Errorf("%s err: %w", h.getCommand(), err)
 	}
 
-	err = db.IncrementMegaprikolUsageCount(d, mp)
+	mp.UsageCount++
+	err = db.UpdateMegaprikol(d, mp)
 	if err != nil {
 		return fmt.Errorf("%s err: %w", h.getCommand(), err)
 	}
