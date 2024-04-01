@@ -16,6 +16,7 @@ func AddAll(b *tele.Bot, pgDb *pg.DB) {
 	handlers := []handler{
 		grow{},
 		leaderboard{},
+		megaprikol{},
 	}
 
 	b.Use(middlewares.ProvideUser(pgDb)) // TODO: restrict to db handlers only

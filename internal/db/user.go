@@ -76,3 +76,11 @@ func UpdateUser(db *pg.DB, u *User) error {
 	}
 	return nil
 }
+
+func GetRandomUsers(db *pg.DB, n int) (users []User, err error) {
+	err = db.Model(&users).OrderExpr("RANDOM()").Limit(n).Select()
+	if err != nil {
+		return nil, fmt.Errorf("error getting random users: %w", err)
+	}
+	return
+}
