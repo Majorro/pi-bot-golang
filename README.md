@@ -24,6 +24,8 @@ docker-compose up --build
 
 `/leaderboard` - shows top 100 growers
 
+`/megaprikol` - throws a random megaprikol mentioning some users from db
+
 ## License
 
 [MIT](LICENSE)
